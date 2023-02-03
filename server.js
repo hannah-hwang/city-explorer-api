@@ -9,6 +9,8 @@ const express = require('express');
 //initializing express library
 const app = express();
 
+const axios = require('axios');
+
 //bringing in cors
 const cors = require('cors');
 
@@ -20,6 +22,7 @@ const PORT = process.env.PORT || 3002;
 
 //bring in weather data
 const weather = require('./data/weather.json');
+const { default: axios } = require('axios');
 
 //default route
 app.get('/', (request, response) => {
@@ -32,13 +35,15 @@ app.get('/', (request, response) => {
 //     response.send(weatherData);
 // });
 
-app.get('/weather', (request, response, next) => {
+app.get('/weather', async (request, response, next) => {
     try {
 
         console.log(request.query);
-        // let lat = request.query.lat;
-        // let lon = request.query.lon;
         let city = request.query.searchQuery;
+        let weatherUrl = `https://api.weatherbit.io/v2.0/forecast/daily?key=${process.env.WEATHER_API_KEY}&city=${city}&days=10`
+
+        let weatherResponse = await axios.get(weatherUrl);
+
         let myCity = new Forecast(city);
         let formattedCity = myCity.getItems();
         response.status(200).send(formattedCity);
@@ -48,6 +53,13 @@ app.get('/weather', (request, response, next) => {
     }
 
 });
+
+app.get('/movies', async (request, response) => {
+    let movie = request.query.searchQuery;
+    let movieUrl = `https://api.themoviedb.org/3/search/movie?api_key=${process.env.MOVIE_API_KEY}&query=&{movie}`
+
+    let movieResponse = await axios.get(movieUrl);
+})
 
 //create formatted data
 class Forecast {
