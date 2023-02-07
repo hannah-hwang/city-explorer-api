@@ -29,11 +29,11 @@ app.get('/', (request, response) => {
 
 app.get('/weather', weather);
 async function weather(request, response, next) {
-    let weatherUrl = `https://api.weatherbit.io/v2.0/forecast/daily?key=${process.env.WEATHER_API_KEY}&lat=${lat}&lon=${lon}&days=10`;
 
     let lat = request.query.lat;
     let lon = request.query.lon;
 
+    let weatherUrl = `https://api.weatherbit.io/v2.0/forecast/daily?key=${process.env.WEATHER_API_KEY}&lat=${lat}&lon=${lon}&days=10`;
     console.log(request.query);
 
     try {
@@ -49,9 +49,10 @@ async function weather(request, response, next) {
 
 app.get('/movies', movies);
 async function movies(request, response, next) {
-    let movieUrl = `https://api.themoviedb.org/3/search/movie?api_key=${process.env.MOVIE_API_KEY}&query=${cityMovie}`;
     let cityMovie = request.query.searchQuery;
+    let movieUrl = `https://api.themoviedb.org/3/search/movie?api_key=${process.env.MOVIE_API_KEY}&language=en-US&query=${cityMovie}&page=1&include_adult=false`;
     try {
+        console.log(movieUrl);
         let movieResponse = await axios.get(movieUrl);
         let movieData = movieResponse.data.results.map(movie => new Movie(movie));
         response.status(200).send(movieData);
