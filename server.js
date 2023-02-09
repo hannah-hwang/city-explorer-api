@@ -49,7 +49,7 @@ async function weather(request, response, next) {
 
 app.get('/movies', movies);
 async function movies(request, response, next) {
-    let cityMovie = request.query.searchQuery;
+    let cityMovie = request.query.city;
     let movieUrl = `https://api.themoviedb.org/3/search/movie?api_key=${process.env.MOVIE_API_KEY}&language=en-US&query=${cityMovie}&page=1&include_adult=false`;
     try {
         console.log(movieUrl);
